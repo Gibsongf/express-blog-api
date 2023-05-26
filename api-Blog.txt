@@ -1,0 +1,30 @@
+one site just READ to show the published post
+
+one site to CREATE DEL AND UPDATE that has all the database store post unpublished/published
+		that can be edited by owner of the posts and published from there (auth stuff here)
+		
+		
+		
+API:		
+	a login url(think in how mongoDB works to connect the uri just given the db password and 
+	username we just do something like that and will give the auth token)
+	
+	a login url that will give the auth token and every time that the api is called
+	a middleware will check if has a valid auth token, just person with the token can modify post
+	or something like that
+	
+	db 
+		model
+			post = title, time-stamp, text,author/profile_id, comments=[ comments_id,],
+									post_instances_id
+			post_instance = published:true/false, edit_auth
+			
+			comments= time-stamp,text,username_comments_id
+			username_comments = username,comments=[]
+			blog_main_author = 
+			need to auth too or something like that
+				            fname, lname, age,		
+			 							profile description(optional),
+			 							post=[]
+			 							comments=[],
+		
