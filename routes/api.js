@@ -17,9 +17,9 @@ router.post("/new-post", Post.new);
 router.get("/post/:id", Post.detail);
 router.get("/post/:id/new-comment", Post.detail);
 
-// PUT
+// PUT instead of get
 router.get("/post/:id/edit", Post.edit);
-
+//
 router.delete("/post/:id", Post.delete);
 
 router.get("/protected", (req, res) => {
