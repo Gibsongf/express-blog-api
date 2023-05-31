@@ -6,7 +6,7 @@ const Post = require("../models/posts");
 
 //GET for the front-end part that edit posts
 exports.details = asyncHandler(async (req, res) => {
-	console.log("req user:", req.user);
+	// console.log("req user:", req.user);
 	const author = await BlogAuthor.findById(req.user.id).exec();
 	const allPosts = await Post.find({ author: req.user.id }).exec();
 	res.json({ author_details: author, posts: allPosts });
