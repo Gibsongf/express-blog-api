@@ -2,11 +2,13 @@ const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
 const BlogAuthorSchema = new Schema({
+	user_name:{ type: String, maxLength: 15, require: true },
+	password:{ type: String, require: true },
 	first_name: { type: String, maxLength: 25, require: true },
     last_name: { type: String, maxLength: 25},
     description:{type: String},
     age:{type: Date},
-    posts:[{type: Schema.Types.ObjectId,ref:'Post'}],
+    // posts:[{type: Schema.Types.ObjectId,ref:'Post'}],
 });
 
 BlogAuthorSchema.virtual("url").get(function () {
@@ -18,10 +20,10 @@ BlogAuthorSchema.virtual("url").get(function () {
 // Virtual for author's full name
 BlogAuthorSchema.virtual("name").get(function () {
     let fullName = "";
-	if (this.fname && this.lname) {
-		fullName = `${this.lname}, ${this.fname}`;
+	if (this.first_name && this.last_name) {
+		fullName = `${this.last_name}, ${this.first_name}`;
 	}
-	if (!this.fname || !this.lname) {
+	if (!this.first_name || !this.last_name) {
 		fullName = "";
 	}
 	return fullName;
