@@ -3,7 +3,7 @@ const asyncHandler = require("express-async-handler");
 const BlogAuthor = require("../models/blog_author");
 const Post = require("../models/posts");
 const { body, validationResult } = require("express-validator");
-
+const Utility = require('../utility')
 // Remove empty field from obj
 const emptyFields = (obj) => {
 	const newObj = {}
@@ -46,12 +46,11 @@ exports.detail = asyncHandler(async (req, res) => {
 
 // modify a existing post, need validating and sanitizing inputs
 exports.edit = asyncHandler(async (req, res) => {
-	const update = emptyFields(req.body);
+	const update = Utility.emptyFields(req.body)
 	const post = await Post.findByIdAndUpdate(req.params.id,update,{
 		new: true
 	  }).exec();
 	await post.save()
-
 	res.json({ post });
 });
 
