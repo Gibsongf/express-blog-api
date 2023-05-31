@@ -4,7 +4,6 @@ const Post = require("../controllers/posts_controllers");
 const BlogAuthor = require("../controllers/blog_author_controllers");
 const Comment = require("../controllers/comments_controllers");
 
-const passport = require("passport");
 
 //Blog Author
 router.get("/blog-author", BlogAuthor.details);
@@ -26,9 +25,12 @@ router.get("/protected", (req, res) => {
 	res.send("You are authorized");
 });
 
+
+
+
 //Comment. this will be protected or not ?
 router.post("/post/:id/new-comment", Comment.new);
-
+router.delete("/post/:id/comment/:commentid", Comment.delete);
 
 
 
