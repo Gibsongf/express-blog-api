@@ -7,6 +7,7 @@ const PostSchema = new Schema({
 	author: { type: Schema.Types.ObjectId, ref: "Blog Author", require: true },
 	text: { type: String, require: true, minLength: 10 },
 	timestamp: { type: Date, default: Date.now },
+	published:{type:Boolean, default:false}
 });
 
 PostSchema.virtual("url").get(function () {

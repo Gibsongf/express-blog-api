@@ -25,7 +25,6 @@ exports.new_author = asyncHandler(async (req, res) => {
 		description: description,
 		age: age,
 	});
-	// console.log(author);
 	await author.save();
 	// res.json({ message: "Post deleted" });
 	res.sendStatus(201);

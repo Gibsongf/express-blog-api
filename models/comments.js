@@ -3,8 +3,8 @@ const Schema = mongoose.Schema;
 
 const CommentSchema = new Schema({
 	post:{ type: Schema.Types.ObjectId, ref: "Post", require: true },
-	text: { type: String, maxLength: 25, require: true },
-	user_name: { type: String, require: true, maxLength: 15, minLength: 4 },
+	text: { type: String, minLength: 3, require: true },
+	user_name: { type: String, require: true, minLength: 3, minLength: 4 },
 	timestamp: { type: Date, default: Date.now },
 });
 CommentSchema.virtual("url").get(function () {
