@@ -15,12 +15,14 @@ exports.new = asyncHandler(async (req, res) => {
         post:req.params.id
     })
     await comment.save()
-    res.json({post,comment})
+    // res.json({post,comment})
+    // 
+    res.sendStatus(201)
 });
 
 exports.delete = asyncHandler(async (req, res) => {
     // console.log(req.params.commentid)
     const comment = await Comment.findByIdAndRemove(req.params.commentid);
-    console.log('comment deleted')
+    // console.log('comment deleted')
 	res.sendStatus(200)
 });

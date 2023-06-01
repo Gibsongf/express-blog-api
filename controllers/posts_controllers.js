@@ -4,15 +4,6 @@ const BlogAuthor = require("../models/blog_author");
 const Post = require("../models/posts");
 const { body, validationResult } = require("express-validator");
 const Utility = require('../utility')
-// Remove empty field from obj
-// const emptyFields = (obj) => {
-// 	const newObj = {}
-// 	const keys = Object.keys(obj)
-// 	keys.forEach(k => {
-// 		if(obj[k].length > 0) return newObj[k] = obj[k]
-// 	})
-// 	return newObj
-// }
 // all blog posts
 exports.all_posts = asyncHandler(async (req, res) => {
 	// db get all posts
@@ -24,6 +15,7 @@ exports.all_posts = asyncHandler(async (req, res) => {
 		res.send("Not post found in database");
 	}
 	res.json({ posts });
+	
 });
 
 // New post
@@ -35,7 +27,8 @@ exports.new = asyncHandler(async (req, res) => {
 		text: req.body.text,
 	});
 	await post.save();
-	res.json({ author, post });
+	// res.json({ author, post });
+	res.sendStatus(201)
 });
 
 // single post detail
@@ -57,5 +50,6 @@ exports.edit = asyncHandler(async (req, res) => {
 // after user confirm delete post
 exports.delete = asyncHandler(async (req, res) => {
 	const post = await Post.findByIdAndRemove(req.params.id).exec();
-	res.json({ message: "Post deleted" });
+	// res.json({ message: "Post deleted" });
+	res.sendStatus(200)
 });

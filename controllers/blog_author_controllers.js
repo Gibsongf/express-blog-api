@@ -1,6 +1,6 @@
 const asyncHandler = require("express-async-handler");
 const { body, validationResult } = require("express-validator");
-const Utility = require('../utility')
+const Utility = require("../utility");
 
 const BlogAuthor = require("../models/blog_author");
 const Post = require("../models/posts");
@@ -27,27 +27,27 @@ exports.new_author = asyncHandler(async (req, res) => {
 	});
 	// console.log(author);
 	await author.save();
-	res.send("New Account Created");
+	// res.json({ message: "Post deleted" });
+	res.sendStatus(201);
 });
 exports.author_posts = asyncHandler(async (req, res) => {});
 
 // POST for the front-end part that edit posts
 exports.edit_details = [
-	// sanitation 
+	// sanitation
 	body("user_name", "Must have a user name").isLength({ max: 15 }).trim(),
 	body("first_name", "Must have a first name").isLength({ min: 3 }).trim(),
 	body("last_name", "").trim(),
 	body("description", "").trim(),
 
-
 	asyncHandler(async (req, res) => {
 		const update = Utility.emptyFields(req.body);
-		console.log(update)
+		console.log(update);
 		const author = await BlogAuthor.findByIdAndUpdate(req.user.id, update, {
 			new: true,
 		}).exec();
 		await author.save();
-		// console.log(author)
-		res.json({ author });
+		// res.json({ author });
+		res.sendStatus(200);
 	}),
 ];

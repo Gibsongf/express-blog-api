@@ -9,7 +9,7 @@ router.get("/blog-author", BlogAuthor.details);
 router.put("/blog-author/edit", BlogAuthor.edit_details);
 
 //Posts
-router.post("/posts", Post.all_posts);
+router.get("/posts", Post.all_posts);
 router.post("/new-post", Post.new);
 
 router.get("/post/:id", Post.detail);
