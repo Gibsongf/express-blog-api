@@ -5,14 +5,14 @@ const Post = require("../models/posts");
 const { body, validationResult } = require("express-validator");
 const Utility = require('../utility')
 // Remove empty field from obj
-const emptyFields = (obj) => {
-	const newObj = {}
-	const keys = Object.keys(obj)
-	keys.forEach(k => {
-		if(obj[k].length > 0) return newObj[k] = obj[k]
-	})
-	return newObj
-}
+// const emptyFields = (obj) => {
+// 	const newObj = {}
+// 	const keys = Object.keys(obj)
+// 	keys.forEach(k => {
+// 		if(obj[k].length > 0) return newObj[k] = obj[k]
+// 	})
+// 	return newObj
+// }
 // all blog posts
 exports.all_posts = asyncHandler(async (req, res) => {
 	// db get all posts

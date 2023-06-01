@@ -1,5 +1,6 @@
 const asyncHandler = require("express-async-handler");
 const { body, validationResult } = require("express-validator");
+const Utility = require('../utility')
 
 const BlogAuthor = require("../models/blog_author");
 const Post = require("../models/posts");
@@ -32,30 +33,21 @@ exports.author_posts = asyncHandler(async (req, res) => {});
 
 // POST for the front-end part that edit posts
 exports.edit_details = [
-	body("first name", "Must have a first name").isLength({ min: 3 }),
+	// sanitation 
+	body("user_name", "Must have a user name").isLength({ max: 15 }).trim(),
+	body("first_name", "Must have a first name").isLength({ min: 3 }).trim(),
+	body("last_name", "").trim(),
+	body("description", "").trim(),
+
+
 	asyncHandler(async (req, res) => {
-		console.log(req.user);
-		const authorDetails = await BlogAuthor.findById(req.user.id).exec();
-		// const replaceEmpty = () => {
-		// 	const keys = Object.keys(authorDetails);
-		// 	keys.forEach((k) => {
-		// 		if (req.body[k] !== undefined) {
-		// 			if (req.body[k].length < 1) {
-		// 				req.body[k] = authorDetails[k];
-		// 			}
-		// 		}
-		// 	});
-		// };
-		// replaceEmpty();
-		console.log(req.body);
-		const blog_author = new BlogAuthor({
-			first_name: req.body.first_name,
-			last_name: req.body.last_name,
-			description: req.body.description,
-			age: req.body.age,
-			_id: authorDetails._id,
-		});
-		console.log(authorDetails);
-		res.json({ blog_author });
+		const update = Utility.emptyFields(req.body);
+		console.log(update)
+		const author = await BlogAuthor.findByIdAndUpdate(req.user.id, update, {
+			new: true,
+		}).exec();
+		await author.save();
+		// console.log(author)
+		res.json({ author });
 	}),
 ];
