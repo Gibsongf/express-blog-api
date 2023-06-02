@@ -13,7 +13,6 @@ router.get("/posts", Post.all_posts);
 router.post("/new-post", Post.new);
 
 router.get("/post/:id", Post.detail);
-router.get("/post/:id/new-comment", Post.detail);
 
 router.put("/post/:id/edit", Post.edit);
 router.delete("/post/:id", Post.delete);
