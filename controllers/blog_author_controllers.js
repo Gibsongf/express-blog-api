@@ -9,6 +9,12 @@ const Post = require("../models/posts");
 exports.details = asyncHandler(async (req, res) => {
 	// console.log("req user:", req.user);
 	const author = await BlogAuthor.findById(req.user.id).exec();
+	if (!author) {
+        res.sendStatus(404).json({
+            error: "Author not found",
+            message: "The requested author does not exist in the database",
+        });
+    }
 	const allPosts = await Post.find({ author: req.user.id }).exec();
 	res.json({ author: author, posts: allPosts });
 });
@@ -41,12 +47,14 @@ exports.edit_details = [
 
 	asyncHandler(async (req, res) => {
 		const update = Utility.emptyFields(req.body);
-		console.log(update);
 		const author = await BlogAuthor.findByIdAndUpdate(req.user.id, update, {
 			new: true,
 		}).exec();
 		await author.save();
-		// res.json({ author });
-		res.sendStatus(200);
+		res.status(200).json({
+			status: "success",
+			message: "Blog Owner updated successfully.",
+			author,
+		});
 	}),
 ];
