@@ -36,7 +36,7 @@ passport.use(
 				const userData = { id: user._id, user_name: user.user_name };
 				return cb(null, userData);
 			} catch (err) {
-				console.log(jwtPayload);
+				
 
 				return cb(err);
 			}
@@ -53,13 +53,13 @@ passport.use(
 	)
 );
 passport.serializeUser(function (user, done) {
-	console.log(user);
+	// console.log(user);
 	done(null, user.id);
 });
 passport.deserializeUser(async function (id, done) {
 	try {
 		const user = await BlogAuthor.findById(id);
-		console.log(user);
+		// console.log(user);
 		done(null, user);
 	} catch (err) {
 		done(err);

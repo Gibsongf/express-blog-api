@@ -10,7 +10,7 @@ exports.details = asyncHandler(async (req, res) => {
 	// console.log("req user:", req.user);
 	const author = await BlogAuthor.findById(req.user.id).exec();
 	const allPosts = await Post.find({ author: req.user.id }).exec();
-	res.json({ author_details: author, posts: allPosts });
+	res.json({ author: author, posts: allPosts });
 });
 
 // POST new user API
