@@ -11,7 +11,7 @@ router.put("/blog-owner/edit", BlogAuthor.edit_details);
 //Posts
 router.get("/posts", Post.all_posts);
 // New post
-router.post("/posts", Post.new);
+router.post("/post", Post.new);
 //Individual post
 router.get("/post/:id", Post.detail);
 

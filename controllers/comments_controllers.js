@@ -31,8 +31,10 @@ exports.new = asyncHandler(async (req, res) => {
 
 exports.delete = asyncHandler(async (req, res) => {
     const comment = await Comment.findByIdAndRemove(req.params.commentID);
+    console.log(comment.url)
+    console.log(req.url)
 	res.status(200).json({
 		status: "success",
 		message: "Post comment deleted.",
-	  });
+	  })
 });
