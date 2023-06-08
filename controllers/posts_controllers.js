@@ -34,7 +34,6 @@ exports.new = asyncHandler(async (req, res) => {
     });
 
     await post.save();
-    // res.json({ author, post });
     res.status(201).json({
         status: "success",
         message: "Post created successfully.",
@@ -50,6 +49,7 @@ exports.detail = asyncHandler(async (req, res) => {
             message: "The requested post does not exist in the database",
         });
     }
+
     const comment = await Comment.find({ post: req.params.id });
     res.json({ post, comment });
 });
@@ -69,7 +69,6 @@ exports.edit = asyncHandler(async (req, res) => {
         });
     }
     await post.save();
-    // res.json({ post });
     res.status(200).json({
         status: "success",
         message: "Blog post updated successfully.",
@@ -79,16 +78,15 @@ exports.edit = asyncHandler(async (req, res) => {
 // after user confirm delete post
 exports.delete = asyncHandler(async (req, res) => {
     const post = await Post.findByIdAndRemove(req.params.id).exec();
-    const comments = await Comment.find({'post':req.params.id}).exec();
-    comments.forEach(async(comment) => {
-        try{
+    const comments = await Comment.find({ post: req.params.id }).exec();
+    comments.forEach(async (comment) => {
+        try {
             const toDel = await Comment.findByIdAndRemove(comment._id).exec();
-        } catch(err){
-            console.log(err)
+        } catch (err) {
+            console.log(err);
         }
-    })
-	
-    // res.json({ message: "Post deleted" });
+    });
+
     res.status(200).json({
         status: "success",
         message: "Blog post deleted.",
