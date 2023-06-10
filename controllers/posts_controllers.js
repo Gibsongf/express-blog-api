@@ -19,26 +19,38 @@ exports.all_posts = asyncHandler(async (req, res) => {
 });
 
 // New post
-exports.new = asyncHandler(async (req, res) => {
-    const author = await BlogAuthor.findById(req.user.id).exec();
-    if (!author) {
-        res.sendStatus(404).json({
-            error: "Author not found",
-            message: "The requested author does not exist in the database",
+exports.new = [
+    body("title", "title must be specified.")
+        .isLength({ max: 15, min: 3 })
+        .trim(),
+    body("text").trim(),
+    asyncHandler(async (req, res) => {
+        const err = validationResult(req);
+        const author = await BlogAuthor.findById(req.user.id).exec();
+        if (!author) {
+            res.sendStatus(404).json({
+                error: "Author not found",
+                message: "The requested author does not exist in the database",
+            });
+        }
+        const post = new Post({
+            title: req.body.title,
+            author: req.user.id,
+            text: req.body.text,
         });
-    }
-    const post = new Post({
-        title: req.body.title,
-        author: req.user.id,
-        text: req.body.text,
-    });
+        if (!err.isEmpty()) {
+            // There are errors. Render form again with sanitized values/errors messages.
+            return res.json({ errors: err.errors });
+        } else {
+            await post.save();
 
-    await post.save();
-    res.status(201).json({
-        status: "success",
-        message: "Post created successfully.",
-    });
-});
+            res.status(201).json({
+                status: "success",
+                message: "Post created successfully.",
+            });
+        }
+    }),
+];
 
 // single post detail
 exports.detail = asyncHandler(async (req, res) => {

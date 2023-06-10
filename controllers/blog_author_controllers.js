@@ -18,21 +18,40 @@ exports.details = asyncHandler(async (req, res) => {
 });
 
 // POST new user API
-(exports.new_author = asyncHandler(async (req, res) => {
-    const { user_name, password, first_name, last_name, description, age } =
-        req.body;
-    const author = new BlogAuthor({
-        user_name: user_name,
-        password: password,
-        first_name: first_name,
-        last_name: last_name,
-        description: description,
-        age: age,
-    });
-    await author.save();
-    res.sendStatus(201);
-})),
-    (exports.author_posts = asyncHandler(async (req, res) => {}));
+exports.new_author = [
+    body("user_name","user name must be specified.")
+        .isLength({ max: 15, min: 3 })
+        .trim(),
+    body("first_name","First name must be specified.")
+        .isLength({ min: 3 })
+        .trim()
+        ,
+    body("last_name").trim(),
+    body("description").trim(),
+    asyncHandler(async (req, res) => {
+        const err = validationResult(req);
+        const { user_name, password, first_name, last_name, description, age } =
+            req.body;
+        const author = new BlogAuthor({
+            user_name: user_name,
+            password: password,
+            first_name: first_name,
+            last_name: last_name,
+            description: description,
+            age: age,
+        });
+        if (!err.isEmpty()) {
+            // There are errors. Render form again with sanitized values/errors messages.
+            return res.json({errors:err.errors});
+        } else {
+            await author.save();
+            res.status(201).json({
+                status: "success",
+                message: "Blog Owner created successfully.",
+            });
+        }
+    }),
+];
 
 // POST for the front-end part that edit posts
 exports.edit_details = [
@@ -53,7 +72,6 @@ exports.edit_details = [
         res.status(200).json({
             status: "success",
             message: "Blog Owner updated successfully.",
-            author,
         });
     }),
 ];

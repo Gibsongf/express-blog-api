@@ -8,11 +8,10 @@ const mongoose = require("mongoose");
 mongoose.set("strictQuery", false);
 const mongoDB = process.env.MONGODB;
 
-main().catch((err) => console.log(err));
 // a new post function to be push to the author new model and add username password to the model
-async function createComment(post){
+async function createComment(post,title){
 	const comment = new Comment({
-		user_name:'tempor incididun',
+		user_name:title,
 		text: "Consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
 		post:post._id
 	})
@@ -20,10 +19,10 @@ async function createComment(post){
 	console.log("Comment created");
 
 }
-async function createPost(author) {
+async function createPost(author,title) {
 	// console.log(author)
 	const post = new Post({
-		title: "Lorem ipsum dolor sit amet",
+		title: title,
 		author: author._id,
 		text: "Consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat",
 	});
@@ -34,11 +33,11 @@ async function createPost(author) {
 }
 async function createAuthor() {
 	const blog_author = new BlogAuthor({
-		user_name: "test",
+		user_name: "gibson",
 		password: "password",
-		first_name: "Test",
-		last_name: "Author",
-		description: "a test blog author",
+		first_name: "Gibson",
+		last_name: "Gomes",
+		description: "Nullam id lectus in ligula semper scelerisque in in mauris. Praesent gravida lorem vitae nisi tempor, non bibendum nulla dignissim. Donec a nunc semper, euismod urna molestie, dapibus dolor.",
 		age: "01/01/1991",
 	});
 	await blog_author.save();
@@ -47,9 +46,13 @@ async function createAuthor() {
 	return blog_author;
 }
 async function main() {
+	const numbs = ['ONE', 'TWO','THREE','FOUR','FIVE']
 	await mongoose.connect(mongoDB);
 	const author = await createAuthor();
-	const post = await createPost(author);
-	await createComment(post)
+	for(let num in numbs){
+		const post = await createPost(author,'POST '+num);
+		await createComment(post,'COMMENT '+num)
+	}
 	mongoose.connection.close();
 }
+main().catch((err) => console.log(err));
