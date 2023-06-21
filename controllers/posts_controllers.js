@@ -33,10 +33,13 @@ exports.new = [
                 message: "The requested author does not exist in the database",
             });
         }
+        
+        const isPublished = (req.body.published === 'true')
         const post = new Post({
             title: req.body.title,
             author: req.user.id,
             text: req.body.text,
+            published:isPublished
         });
         if (!err.isEmpty()) {
             // There are errors. Render form again with sanitized values/errors messages.
@@ -68,8 +71,9 @@ exports.detail = asyncHandler(async (req, res) => {
 
 // modify a existing post, need validating and sanitizing inputs
 exports.edit = asyncHandler(async (req, res) => {
+    // console.log(req.body)
     const update = Utility.emptyFields(req.body);
-
+    
     const post = await Post.findByIdAndUpdate(req.params.id, update, {
         new: true,
     }).exec();
