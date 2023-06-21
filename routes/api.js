@@ -8,8 +8,8 @@ const Comment = require("../controllers/comments_controllers");
 router.get("/blog-owner", BlogAuthor.details);
 router.put("/blog-owner/edit", BlogAuthor.edit_details);
 
-//Posts
-router.get("/posts", Post.all_posts);
+// //Posts
+// router.get("/posts", Post.all_posts);
 // New post
 router.post("/post", Post.new);
 //Individual post

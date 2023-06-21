@@ -7,6 +7,7 @@ const passport = require("passport");
 const cors = require("cors");
 
 const apiRouter = require("./routes/api");
+const indexRouter = require('./routes/index')
 require("dotenv").config();
 require("./passport");
 const app = express();
@@ -25,6 +26,7 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 app.use("/users", require("./routes/users"));
+app.use('/index',indexRouter)
 app.use("/api", passport.authenticate("jwt", { session: false }), apiRouter);
 
 //connect to db

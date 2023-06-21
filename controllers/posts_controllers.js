@@ -8,14 +8,26 @@ const Utility = require("../utility");
 // all blog posts
 exports.all_posts = asyncHandler(async (req, res) => {
     // db get all posts
-    const posts = await Post.find(
-        { author: req.user.id },
-        "title text timestamp"
-    ).exec();
-    if (!posts) {
+    const authors = await BlogAuthor.find({}).exec();
+    if (!authors) {
+        res.send("authors not found in database");
+    }
+    const onePostPerAuthorPromises = authors.map(async (author) => {
+        const post = await Post.findOne({ author: author._id,published:true })
+            .populate("title")
+            .populate("author")
+            .populate("timestamp")
+            .exec();
+
+        return post;
+    });
+
+    const onePostPerAuthor = await Promise.all(onePostPerAuthorPromises);
+    if (!onePostPerAuthor) {
         res.send("Not post found in database");
     }
-    res.json({ posts });
+
+    res.json({ allPost: onePostPerAuthor });
 });
 
 // New post
@@ -33,13 +45,13 @@ exports.new = [
                 message: "The requested author does not exist in the database",
             });
         }
-        
-        const isPublished = (req.body.published === 'true')
+
+        const isPublished = req.body.published === "true";
         const post = new Post({
             title: req.body.title,
             author: req.user.id,
             text: req.body.text,
-            published:isPublished
+            published: isPublished,
         });
         if (!err.isEmpty()) {
             // There are errors. Render form again with sanitized values/errors messages.
@@ -73,7 +85,7 @@ exports.detail = asyncHandler(async (req, res) => {
 exports.edit = asyncHandler(async (req, res) => {
     // console.log(req.body)
     const update = Utility.emptyFields(req.body);
-    
+
     const post = await Post.findByIdAndUpdate(req.params.id, update, {
         new: true,
     }).exec();

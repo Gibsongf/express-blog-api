@@ -8,6 +8,7 @@ const mongoose = require("mongoose");
 mongoose.set("strictQuery", false);
 const mongoDB = process.env.MONGODB;
 
+
 // a new post function to be push to the author new model and add username password to the model
 async function createComment(post, user_name) {
     const comment = new Comment({
@@ -57,4 +58,4 @@ async function main() {
     }
     mongoose.connection.close();
 }
-main().catch((err) => console.log(err));
+// main().catch((err) => console.log(err));
