@@ -17,6 +17,18 @@ exports.details = asyncHandler(async (req, res) => {
     res.json({ author: author, posts: allPosts });
 });
 
+exports.public_details = asyncHandler(async (req, res) => {
+    const author = await BlogAuthor.findById(req.user.id).exec();
+    if (!author) {
+        res.sendStatus(404).json({
+            error: "Author not found",
+            message: "The requested author does not exist in the database",
+        });
+    }
+    const allPosts = await Post.find({ author: req.user.id }).exec();
+    res.json({ author: author, posts: allPosts });
+});
+
 // POST new user API
 exports.new_author = [
     body("user_name","user name must be specified.")

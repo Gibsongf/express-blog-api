@@ -6,17 +6,15 @@ const Comment = require("../models/comments");
 const { body, validationResult } = require("express-validator");
 const Utility = require("../utility");
 // all blog posts
-exports.all_posts = asyncHandler(async (req, res) => {
+exports.all_users_posts = asyncHandler(async (req, res) => {
     // db get all posts
     const authors = await BlogAuthor.find({}).exec();
     if (!authors) {
         res.send("authors not found in database");
     }
     const onePostPerAuthorPromises = authors.map(async (author) => {
-        const post = await Post.findOne({ author: author._id,published:true })
-            .populate("title")
+        const post = await Post.findOne({ author: author._id, published: true })
             .populate("author")
-            .populate("timestamp")
             .exec();
 
         return post;
@@ -79,6 +77,20 @@ exports.detail = asyncHandler(async (req, res) => {
 
     const comment = await Comment.find({ post: req.params.id });
     res.json({ post, comment });
+});
+
+exports.public_detail = asyncHandler(async (req, res) => {
+    const post = await Post.findById(req.params.id).exec()
+    const author = await BlogAuthor.findById(post.author).exec();
+    if (!post) {
+        res.sendStatus(404).json({
+            error: "Post not found",
+            message: "The requested post does not exist in the database",
+        });
+    }
+    console.log(author.name)
+    const comment = await Comment.find({ post: req.params.id });
+    res.json({ post,author:author.name, comment });
 });
 
 // modify a existing post, need validating and sanitizing inputs
