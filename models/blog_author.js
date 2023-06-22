@@ -8,7 +8,6 @@ const BlogAuthorSchema = new Schema({
     last_name: { type: String, maxLength: 25 },
     description: { type: String },
     age: { type: Date },
-    // posts:[{type: Schema.Types.ObjectId,ref:'Post'}],
 });
 
 // Virtual for author's full name
@@ -18,7 +17,7 @@ BlogAuthorSchema.virtual("name").get(function () {
         fullName = `${this.first_name} ${this.last_name}`;
     }
     if (!this.last_name) {
-        fullName = this.first_name
+        fullName = this.first_name;
     }
     return fullName;
 });

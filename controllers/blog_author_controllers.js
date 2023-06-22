@@ -18,7 +18,6 @@ exports.details = asyncHandler(async (req, res) => {
 });
 
 exports.public_details = asyncHandler(async (req, res) => {
-    // console.log(req)
     const author = await BlogAuthor.findById(req.params.id).exec();
     if (!author) {
         res.sendStatus(404).json({
@@ -26,19 +25,21 @@ exports.public_details = asyncHandler(async (req, res) => {
             message: "The requested author does not exist in the database",
         });
     }
-    const allPosts = await Post.find({ author: req.params.id,published:true }).exec();
+    const allPosts = await Post.find({
+        author: req.params.id,
+        published: true,
+    }).exec();
     res.json({ name: author.name, posts: allPosts });
 });
 
 // POST new user API
 exports.new_author = [
-    body("user_name","user name must be specified.")
+    body("user_name", "user name must be specified.")
         .isLength({ max: 15, min: 3 })
         .trim(),
-    body("first_name","First name must be specified.")
+    body("first_name", "First name must be specified.")
         .isLength({ min: 3 })
-        .trim()
-        ,
+        .trim(),
     body("last_name").trim(),
     body("description").trim(),
     asyncHandler(async (req, res) => {
@@ -55,7 +56,7 @@ exports.new_author = [
         });
         if (!err.isEmpty()) {
             // There are errors. Render form again with sanitized values/errors messages.
-            return res.json({errors:err.errors});
+            return res.json({ errors: err.errors });
         } else {
             await author.save();
             res.status(201).json({

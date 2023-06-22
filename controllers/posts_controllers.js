@@ -5,9 +5,8 @@ const Post = require("../models/posts");
 const Comment = require("../models/comments");
 const { body, validationResult } = require("express-validator");
 const Utility = require("../utility");
-// all blog posts
+
 exports.all_users_posts = asyncHandler(async (req, res) => {
-    // db get all posts
     const authors = await BlogAuthor.find({}).exec();
     if (!authors) {
         res.send("authors not found in database");
@@ -80,7 +79,7 @@ exports.detail = asyncHandler(async (req, res) => {
 });
 
 exports.public_detail = asyncHandler(async (req, res) => {
-    const post = await Post.findById(req.params.id).exec()
+    const post = await Post.findById(req.params.id).exec();
     const author = await BlogAuthor.findById(post.author).exec();
     if (!post) {
         res.sendStatus(404).json({
@@ -88,14 +87,13 @@ exports.public_detail = asyncHandler(async (req, res) => {
             message: "The requested post does not exist in the database",
         });
     }
-    console.log(author.name)
+    console.log(author.name);
     const comment = await Comment.find({ post: req.params.id });
-    res.json({ post,author:author.name, comment });
+    res.json({ post, author: author.name, comment });
 });
 
 // modify a existing post, need validating and sanitizing inputs
 exports.edit = asyncHandler(async (req, res) => {
-    // console.log(req.body)
     const update = Utility.emptyFields(req.body);
 
     const post = await Post.findByIdAndUpdate(req.params.id, update, {

@@ -7,7 +7,7 @@ const passport = require("passport");
 const cors = require("cors");
 
 const apiRouter = require("./routes/api");
-const publicApiRouter = require('./routes/public_api')
+const publicApiRouter = require("./routes/public_api");
 require("dotenv").config();
 require("./passport");
 const app = express();
@@ -26,7 +26,7 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 app.use("/users", require("./routes/users"));
-app.use('/public',publicApiRouter)
+app.use("/public", publicApiRouter);
 app.use("/api", passport.authenticate("jwt", { session: false }), apiRouter);
 
 //connect to db
