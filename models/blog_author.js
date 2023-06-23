@@ -6,8 +6,6 @@ const BlogAuthorSchema = new Schema({
     password: { type: String, require: true },
     first_name: { type: String, maxLength: 25, require: true },
     last_name: { type: String, maxLength: 25 },
-    description: { type: String },
-    age: { type: Date },
 });
 
 // Virtual for author's full name
