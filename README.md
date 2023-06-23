@@ -2,7 +2,7 @@
 
 This repository contains the code for a Node.js-based RESTful API for a blog application. The API allows users to create and manage blog posts, interact with comments, and perform user authentication.
 
-This project is part of [The Odin Project](https://www.theodinproject.com/) curriculum. It serves as a practical exercise for building a Node.js-based RESTful API and implementing user authentication. The project is actively maintained and may receive updates and improvements.
+This project is part of [The Odin Project](https://www.theodinproject.com/) curriculum.
 
 ## Features
 
