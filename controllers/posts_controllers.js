@@ -29,10 +29,15 @@ exports.all_users_posts = asyncHandler(async (req, res) => {
 
 // New post
 exports.new = [
-    body("title", "title must be specified.")
+    body("title")
+        .trim()
         .isLength({ max: 15, min: 3 })
-        .trim(),
-    body("text").trim(),
+        .withMessage("title must be specified"),
+    body("text")
+        .trim()
+        .isLength({ min: 10 })
+        .withMessage("text must be specified"),
+
     asyncHandler(async (req, res) => {
         const err = validationResult(req);
         const author = await BlogAuthor.findById(req.user.id).exec();
@@ -51,7 +56,6 @@ exports.new = [
             published: isPublished,
         });
         if (!err.isEmpty()) {
-            // There are errors. Render form again with sanitized values/errors messages.
             return res.json({ errors: err.errors });
         } else {
             await post.save();

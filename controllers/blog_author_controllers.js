@@ -35,11 +35,11 @@ exports.public_details = asyncHandler(async (req, res) => {
 // POST new user API
 exports.new_author = [
     body("user_name", "user name must be specified.")
-        .isLength({ max: 15, min: 3 })
-        .trim(),
+        .trim()
+        .isLength({ max: 15, min: 3 }),
     body("first_name", "First name must be specified.")
-        .isLength({ min: 3 })
-        .trim(),
+        .trim()
+        .isLength({ min: 3 }),
     body("last_name").trim(),
     body("description").trim(),
     asyncHandler(async (req, res) => {
@@ -78,14 +78,20 @@ exports.edit_details = [
     body("description", "").trim(),
 
     asyncHandler(async (req, res) => {
+        const err = validationResult(req);
         const update = Utility.emptyFields(req.body);
         const author = await BlogAuthor.findByIdAndUpdate(req.user.id, update, {
             new: true,
         }).exec();
-        await author.save();
-        res.status(200).json({
-            status: "success",
-            message: "Blog Owner updated successfully.",
-        });
+        if (!err.isEmpty()) {
+            // There are errors. Render form again with sanitized values/errors messages.
+            return res.json({ errors: err.errors });
+        } else {
+            await author.save();
+            res.status(200).json({
+                status: "success",
+                message: "Blog Owner updated successfully.",
+            });
+        }
     }),
 ];
