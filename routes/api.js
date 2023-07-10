@@ -17,7 +17,7 @@ router.put("/post/:id/edit", Post.edit);
 router.delete("/post/:id", Post.delete);
 
 //Comment.
-router.put("/post/:id/comment", Comment.new);
+router.post("/post/:id/comment", Comment.new);
 router.delete("/post/:id/comment/:commentID", Comment.delete);
 
 module.exports = router;

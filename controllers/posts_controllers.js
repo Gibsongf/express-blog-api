@@ -91,32 +91,41 @@ exports.public_detail = asyncHandler(async (req, res) => {
             message: "The requested post does not exist in the database",
         });
     }
-    console.log(author.name);
     const comment = await Comment.find({ post: req.params.id });
     res.json({ post, author: author.name, comment });
 });
 
 // modify a existing post, need validating and sanitizing inputs
-exports.edit = asyncHandler(async (req, res) => {
-    const update = Utility.emptyFields(req.body);
+exports.edit = [
+    body("title")
+        .trim()
+        .isLength({ max: 15, min: 3 })
+        .withMessage("title must be specified"),
+    body("text")
+        .trim()
+        .isLength({ min: 10 })
+        .withMessage("text must be specified"),
 
-    const post = await Post.findByIdAndUpdate(req.params.id, update, {
-        new: true,
-    }).exec();
+    asyncHandler(async (req, res) => {
+        const update = Utility.emptyFields(req.body);
+        const err = validationResult(req);
 
-    if (!post) {
-        res.sendStatus(404).json({
-            error: "Post not found",
-            message: "The requested post does not exist in the database",
-        });
-    }
-    await post.save();
-    res.status(200).json({
-        status: "success",
-        message: "Blog post updated successfully.",
-        post: post,
-    });
-});
+        const post = await Post.findByIdAndUpdate(req.params.id, update, {
+            new: true,
+        }).exec();
+
+        if (!err.isEmpty()) {
+            return res.json({ errors: err.errors });
+        } else {
+            await post.save();
+            res.status(200).json({
+                status: "success",
+                message: "Blog post updated successfully.",
+                post: post,
+            });
+        }
+    }),
+];
 // after user confirm delete post
 exports.delete = asyncHandler(async (req, res) => {
     const post = await Post.findByIdAndRemove(req.params.id).exec();
