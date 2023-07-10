@@ -7,10 +7,14 @@ const { body, validationResult } = require("express-validator");
 
 // post new comment
 exports.new = [
-    body("user_name", "user name must be specified.")
+    body("user_name")
+        .trim()
         .isLength({ max: 15, min: 3 })
+        .withMessage("user name must be specified."),
+    body("comment_text")
+        .isLength({ min: 3 })
+        .withMessage("Comment cant be empty")
         .trim(),
-    body("comment_text", "comment cant be empty").isLength({ min: 3 }).trim(),
     asyncHandler(async (req, res) => {
         const err = validationResult(req);
         const post = await Post.findById(req.params.id);

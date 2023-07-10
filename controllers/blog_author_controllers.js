@@ -34,14 +34,15 @@ exports.public_details = asyncHandler(async (req, res) => {
 
 // POST new user API
 exports.new_author = [
-    body("user_name", "user name must be specified.")
+    body("user_name")
         .trim()
-        .isLength({ max: 15, min: 3 }),
-    body("first_name", "First name must be specified.")
+        .isLength({ max: 15, min: 3 })
+        .withMessage("Must have a user name"),
+    body("first_name")
         .trim()
-        .isLength({ min: 3 }),
+        .isLength({ min: 3 })
+        .withMessage("Must have a first name"),
     body("last_name").trim(),
-    body("description").trim(),
     asyncHandler(async (req, res) => {
         const err = validationResult(req);
         const { user_name, password, first_name, last_name, description, age } =
@@ -70,12 +71,15 @@ exports.new_author = [
 // POST for the front-end part that edit posts
 exports.edit_details = [
     // sanitation
-    body("user_name", "Must have a user name")
+    body("user_name")
+        .trim()
         .isLength({ max: 15, min: 3 })
-        .trim(),
-    body("first_name", "Must have a first name").isLength({ min: 3 }).trim(),
-    body("last_name", "").trim(),
-    body("description", "").trim(),
+        .withMessage("Must have a user name"),
+    body("first_name")
+        .trim()
+        .isLength({ min: 3 })
+        .withMessage("Must have a first name"),
+    body("last_name").trim(),
 
     asyncHandler(async (req, res) => {
         const err = validationResult(req);
