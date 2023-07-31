@@ -70,7 +70,10 @@ exports.new = [
 
 // single post detail
 exports.detail = asyncHandler(async (req, res) => {
-    const post = await Post.findById(req.params.id).exec();
+    const [post, comment] = await Promise.all([
+        Post.findById(req.params.id).populate("author").exec(),
+        Comment.find({ post: req.params.id }),
+    ]);
     if (!post) {
         res.sendStatus(404).json({
             error: "Post not found",
@@ -78,12 +81,14 @@ exports.detail = asyncHandler(async (req, res) => {
         });
     }
 
-    const comment = await Comment.find({ post: req.params.id });
     res.json({ post, comment });
 });
 
 exports.public_detail = asyncHandler(async (req, res) => {
-    const post = await Post.findById(req.params.id).exec();
+    const [post, comment] = await Promise.all([
+        Post.findById(req.params.id).populate("author").exec(),
+        Comment.find({ post: req.params.id }),
+    ]);
     const author = await BlogAuthor.findById(post.author).exec();
     if (!post) {
         res.sendStatus(404).json({
@@ -91,7 +96,6 @@ exports.public_detail = asyncHandler(async (req, res) => {
             message: "The requested post does not exist in the database",
         });
     }
-    const comment = await Comment.find({ post: req.params.id });
     res.json({ post, author: author.name, comment });
 });
 
@@ -128,8 +132,10 @@ exports.edit = [
 ];
 // after user confirm delete post
 exports.delete = asyncHandler(async (req, res) => {
-    const post = await Post.findByIdAndRemove(req.params.id).exec();
-    const comments = await Comment.find({ post: req.params.id }).exec();
+    const [post, comments] = await Promise.all([
+        Post.findByIdAndRemove(req.params.id).exec(),
+        Comment.find({ post: req.params.id }),
+    ]);
     comments.forEach(async (comment) => {
         try {
             const toDel = await Comment.findByIdAndRemove(comment._id).exec();
