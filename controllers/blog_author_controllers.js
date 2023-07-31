@@ -6,29 +6,35 @@ const Post = require("../models/posts");
 
 //GET for the front-end part that edit posts
 exports.details = asyncHandler(async (req, res) => {
-    const author = await BlogAuthor.findById(req.user.id).exec();
+    const [author, allPosts] = await Promise.all([
+        BlogAuthor.findById(req.user.id).exec(),
+        Post.find({ author: req.user.id }).exec(),
+    ]);
+
     if (!author) {
         res.sendStatus(404).json({
             error: "Author not found",
             message: "The requested author does not exist in the database",
         });
     }
-    const allPosts = await Post.find({ author: req.user.id }).exec();
     res.json({ author: author, posts: allPosts });
 });
 
 exports.public_details = asyncHandler(async (req, res) => {
-    const author = await BlogAuthor.findById(req.params.id).exec();
+    const [author, allPosts] = await Promise.all([
+        BlogAuthor.findById(req.params.id).exec(),
+        Post.find({
+            author: req.params.id,
+            published: true,
+        }).exec(),
+    ]);
     if (!author) {
         res.sendStatus(404).json({
             error: "Author not found",
             message: "The requested author does not exist in the database",
         });
     }
-    const allPosts = await Post.find({
-        author: req.params.id,
-        published: true,
-    }).exec();
+
     res.json({ name: author.name, posts: allPosts });
 });
 
