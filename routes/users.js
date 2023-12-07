@@ -22,7 +22,9 @@ router.get("/", function (req, res, next) {
 });
 router.post("/register", saltPassword, BlogAuthor.new_author);
 router.post("/login", function (req, res, next) {
+    // console.log(req);
     passport.authenticate("local", { session: false }, (err, user, info) => {
+        // console.log(user);
         if (err || !user) {
             return res.status(400).json({
                 message: "Something is not right",
