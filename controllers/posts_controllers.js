@@ -11,20 +11,21 @@ exports.all_users_posts = asyncHandler(async (req, res) => {
     if (!authors) {
         res.send("authors not found in database");
     }
-    const onePostPerAuthorPromises = authors.map(async (author) => {
-        const post = await Post.findOne({ author: author._id, published: true })
+    const AllAuthorPosts = authors.map(async (author) => {
+        const post = await Post.find({ author: author._id, published: true })
             .populate("author")
             .exec();
 
         return post;
     });
 
-    const onePostPerAuthor = await Promise.all(onePostPerAuthorPromises);
-    if (!onePostPerAuthor) {
+    const all = await Promise.all(AllAuthorPosts);
+    if (!all) {
         res.send("Not post found in database");
     }
+    const flattenedAllPost = all.flat(Infinity);
 
-    res.json({ allPost: onePostPerAuthor });
+    res.json({ allPost: flattenedAllPost });
 });
 
 // New post

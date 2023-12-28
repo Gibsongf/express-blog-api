@@ -6,11 +6,11 @@ const Post = require("../models/posts");
 
 //GET for the front-end part that edit posts
 exports.details = asyncHandler(async (req, res) => {
+    //req.user to get the id save at user.js
     const [author, allPosts] = await Promise.all([
         BlogAuthor.findById(req.user.id).exec(),
         Post.find({ author: req.user.id }).exec(),
     ]);
-
     if (!author) {
         res.sendStatus(404).json({
             error: "Author not found",

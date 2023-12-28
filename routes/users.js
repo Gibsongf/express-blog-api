@@ -33,7 +33,7 @@ router.post("/login", function (req, res, next) {
         }
         req.login(user, { session: false }, (err) => {
             if (err) {
-                res.send(err);
+                res.status(400).send(err);
             }
             // generate a signed son web token with the contents of user object and return it in the response
             const token = jwt.sign(

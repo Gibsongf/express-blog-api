@@ -5,8 +5,8 @@ const BlogAuthor = require("../controllers/blog_author_controllers");
 const Comment = require("../controllers/comments_controllers");
 
 //Blog Author
-router.get("/blog-owner", BlogAuthor.details);
-router.put("/blog-owner/edit", BlogAuthor.edit_details);
+router.get("/user-blog", BlogAuthor.details);
+router.put("/user-blog/edit", BlogAuthor.edit_details);
 
 // New post
 router.post("/post", Post.new);
